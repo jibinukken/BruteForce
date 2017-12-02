@@ -1,0 +1,85 @@
+<job>
+<script language="JScript">
+WSH.echo ( "Hello!" );
+
+var pwchars = " 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+var pwchar = new Array();
+for (j=0;j<=pwchars.length-1;j++)
+   	{
+    	pwchar[j] = pwchars.substr(j,1);
+	}
+//pwchar[pwchars.length] will be NaN as it is not declared
+
+WSH.echo ( pwchar[1] + pwchar[pwchars.length] + pwchar[5] + pwchar[0] );
+
+
+WSH.echo ( pwchars.length );
+
+</script>
+
+//var name=WSH.prompt("your name here",""); works in vb script.
+
+//------------------------------------------------------------------------//
+<script language="VBScript">
+Function WSHInputBox(Message, Title, Value)
+WSHInputBox = InputBox(Message, Title, Value)
+End Function
+
+Function Extract(ZipFile, ExtractTo)
+'If the extraction location does not exist create it.
+	Set fso = CreateObject("Scripting.FileSystemObject")
+	If NOT fso.FolderExists(ExtractTo) Then
+   		fso.CreateFolder(ExtractTo)
+	End If
+
+	'Extract the contents of the zip file.
+	set objShell = CreateObject("Shell.Application")
+	set FilesInZip=objShell.NameSpace(ZipFile).items
+	objShell.NameSpace(ExtractTo).CopyHere(FilesInZip)
+	Set fso = Nothing
+	Set objShell = Nothing
+End Function
+</script>
+//------------------------------------------------------------------------//
+
+<script language="JScript">
+
+//var vbOKOnly = 0;
+//var vbInformation = 64; //constants for popup
+
+var message = "Enter exact name here";
+var title = "Input the zip file here";
+var ZipFile = WSHInputBox(message,title, "*.zip");
+var i, j ;
+var n = WSHInputBox("Enter password length", "LENGTH OF PASSWORD", "");
+var ExtractTo = WSHInputBox("Enter the path where zip is to be extracted", "Location", "");
+
+if (ZipFile != null)   
+   {  // Cancel wasn't clicked, so get input.
+       //var intDoIt =  WshShell.Popup("You entered: " + ZipFile, 0, "Result", vbOKOnly + vbInformation);
+       
+	for (j=n;j>=0;j--) /*take n to be 32.*/
+ 	{	
+   	for (i=0;i<=pwchars.length-1;i++)
+   	{
+    	var pw = pw + pwchar[i] + pwchar[pwchars.length];
+	//if (pw.length>=n) break;
+	//var shell = new ActiveXObject("WScript.shell");
+    	//shell.run( "winzip32 -e -s" + pw + " " + ZipFile + " " + ExtractTo)
+    	//shell.run( "taskkill.exe /im winzip32.exe" )
+    	//WSH.echo ( "password : " + pw );
+
+	Extract(ZipFile, ExtractTo);
+
+    	//break;
+	}
+ 	}
+   }
+   else
+   { // Cancel button was clicked.
+       WSH.echo("Sorry, no input");
+   }                           
+ 
+WSH.echo ( "last password : " + pw );
+</script>
+</job>
